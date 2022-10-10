@@ -4,14 +4,15 @@ import java.util.ArrayList;
 
 // ---------------------------------------------------------------------------------------------------------------- //
 
-class BankAccount{
-
+class BankAccount {
 
     private int id, transfers;
     private String name, user, pass, cpf, city;
-    ArrayList<String> emails;
     private float balance;
-
+    public ArrayList<String> emails;
+    
+    // --------------------------------------------------- // 
+    
     public BankAccount() {
 
         this.id = -1;
@@ -21,6 +22,8 @@ class BankAccount{
         this.emails = new ArrayList<String>();
     }
 
+    // --------------------------------------------------- // 
+    
     public int getId() { return id; }
     public String getName() { return name; }
     public String getUser() { return user; }
@@ -32,6 +35,8 @@ class BankAccount{
     public int getTransfers() { return transfers; }
     public ArrayList<String> getEmails() { return emails; }
 
+    // --------------------------------------------------- // 
+    
     public void setId(int id) { this.id = id; }
     public void setName(String name) { this.name = name; }
     public void setUser(String user) { this.user = user; }
@@ -42,6 +47,8 @@ class BankAccount{
     public void setTransfers(int transfers) { this.transfers = transfers; }
     public void addEmail(String email) { this.emails.add(email); }
 
+    // --------------------------------------------------- // 
+    
     public byte[] toByteArray() throws Exception {
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -64,6 +71,4 @@ class BankAccount{
         baos.close();
         return baos.toByteArray();
     }
-  
-// ---------------------------------------------------------------------------------------------------------------- //
 }

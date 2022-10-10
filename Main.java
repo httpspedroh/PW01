@@ -1,9 +1,12 @@
 import java.io.RandomAccessFile;
 import java.util.Scanner;
 
+// ---------------------------------------------------------------------------------------------------------------- //
+
 public class Main {
 
     public static void main(String[] args) throws Exception {
+
         int globalId = Crud.globalId;
         
         RandomAccessFile raf = new RandomAccessFile("accounts.bin", "rw");
@@ -370,5 +373,4 @@ public class Main {
         scr.close();
         raf.close();
     }
- 
 }

@@ -1,9 +1,13 @@
 import java.io.RandomAccessFile;
 
+// ---------------------------------------------------------------------------------------------------------------- //
+
 public class Crud {
 
     static int globalId;
 
+    // --------------------------------------------------- // 
+    
     public static boolean create(String source, BankAccount ba) {
 
         try {
@@ -32,6 +36,8 @@ public class Crud {
         }
         catch(Exception e) { return false; }
     }
+
+    // --------------------------------------------------- // 
 
     public static boolean update(BankAccount ba) {
 
@@ -86,6 +92,8 @@ public class Crud {
         catch(Exception e) { return false; }
     }
 
+    // --------------------------------------------------- // 
+    
     public static BankAccount delete(BankAccount ba) {  
             
         try {
@@ -119,6 +127,8 @@ public class Crud {
         catch(Exception e) { return null; }
     }
 
+    // --------------------------------------------------- // 
+    
     public static BankAccount searchById(String source, int id) {
 
         try {
@@ -163,6 +173,8 @@ public class Crud {
         catch(Exception e) { return null; }
     }
 
+    // --------------------------------------------------- // 
+    
     public static BankAccount searchByUser(String user) {
 
         try {
@@ -206,4 +218,6 @@ public class Crud {
         }
         catch(Exception e) { return null; }
     }
+
+    // --------------------------------------------------- // 
 }
