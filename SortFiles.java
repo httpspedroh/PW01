@@ -12,21 +12,26 @@ public class SortFiles {
     public static final int maxSize = 10; // numero maximo de registros que o pc aguenta por sort
 
     public static void insertionSort(ArrayList<BankAccount> a) {
+
         final int n = a.size();
-        for (int i = 1; i < n; ++i) {
+
+        for(int i = 1; i < n; ++i) {
+
             BankAccount tmp = a.get(i);
+
             int j = i - 1;
-            while ((j >= 0) && (a.get(j).getId() > tmp.getId())) {
+
+            while((j >= 0) && (a.get(j).getId() > tmp.getId())) {
+
                 a.set(j + 1, a.get(j));
                 j--;
             }
+
             a.set(j + 1, tmp);
         }
     }
 
-    public static String changeIndex(int k) {
-        return "f" + k;
-    }
+    public static String changeIndex(int k) { return Integer.toString(k); }
 
     /*
      * @param raf, raf do arquivo
@@ -39,16 +44,17 @@ public class SortFiles {
 
         BankAccount ba = new BankAccount();
 
-        raf.seek(4);
+        while(raf.getFilePointer() < raf.length()) {
 
-        while (raf.getFilePointer() < raf.length()) {
-            for (int x = 0; x < pointer; x++) {
-                // raf.readByte();
+            for(int x = 0; x < pointer; x++) {
+
+                raf.readByte();
                 raf.skipBytes(raf.readInt());
             }
 
             try {
-                // raf.readByte();
+                
+                raf.readByte();
                 raf.readInt();
 
                 ba.setId(raf.readInt());
@@ -60,16 +66,12 @@ public class SortFiles {
                 ba.setBalance(raf.readFloat());
                 ba.setTransfers(raf.readInt());
 
-                int emailsCount = raf.readInt();
-                for (int i = 0; i < emailsCount; i++)
-                    ba.addEmail(raf.readUTF());
+                for(int i = 0; i < raf.readInt(); i++) ba.addEmail(raf.readUTF());
 
                 raf.close();
-                System.out.println("dbg");
                 return ba;
-            } catch (Exception e) {
-                return null;
             }
+            catch (Exception e) { return null; }
         }
         return null;
     }
@@ -83,8 +85,8 @@ public class SortFiles {
         // lista com os arquivos
         List<File> files = new ArrayList<>();
         // adiciona todos os arquivos do modelo 'f' + i no array de arquivos
-        for (int i = 1; i <= size; ++i) {
-            File tmp = new File("f" + i);
+        for (int i = 0; i < size; ++i) {
+            File tmp = new File(Integer.toString(i));
             files.add(tmp);
         }
 
@@ -98,7 +100,7 @@ public class SortFiles {
                 if(pointer[count] < Crud.getTotalAccounts(x.getName())){
                     BankAccount ba = readBankAccount(raf, pointer[count]);
                     pq.add(ba);
-                    mp.put(ba.getId(), x.getName().substring(1, x.getName().length() - 1));
+                    mp.put(ba.getId(), x.getName());
                 }
                 // pointer[count]++;
                 // FileInputStream fin = new FileInputStream(x);
@@ -106,11 +108,13 @@ public class SortFiles {
                 count++;
             }
             Crud.create(output, pq.peek());// cria uma conta com o primeiro elemento do minHeap
+            
             String tmp = mp.get(pq.peek().getId());
-            pointer[Integer.parseInt(tmp.substring(1, tmp.length() - 1)) - 1]++;
+            pointer[Integer.parseInt(tmp)]++;
+            
             pq.remove();// tira um elemento do heap
-            if (pq.isEmpty())
-                break;
+            
+            if(pq.isEmpty()) break;
         }
     }
 
@@ -147,10 +151,11 @@ public class SortFiles {
     }
 
     public static void main(String[] args) throws IOException {
+
         System.out.println(Crud.globalId);
-        for (int i = 0; i < 10; ++i) {
-            System.out.println(changeIndex(i));
-        }
-        solve("accounts.bin", 1, 1);
+
+        for(int i = 0; i < 10; ++i) System.out.println(changeIndex(i));
+        
+        solve("accounts.bin", 1, 0);
     }
 }
