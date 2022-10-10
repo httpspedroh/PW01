@@ -109,7 +109,7 @@ public class Main {
                     System.out.println("\n>>> Conta criada com sucesso!");
                     System.out.println("==================================\n");
 
-                    Crud.create("accounts.bin",ba);
+                    Crud.create("accounts.bin", ba);
                     break;
                 }
 

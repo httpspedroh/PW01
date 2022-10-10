@@ -1,36 +1,8 @@
 import java.io.RandomAccessFile;
 
-public class Crud{
+public class Crud {
+
     static int globalId;
-
-    public static boolean create(BankAccount ba) {
-
-        try {
-
-            RandomAccessFile raf = new RandomAccessFile("accounts.bin", "rw");
-
-            raf.seek(raf.length());
-            raf.writeByte(0);
-            raf.writeInt(ba.toByteArray().length);
-            raf.writeInt(ba.getId());
-            raf.writeUTF(ba.getName());
-            raf.writeUTF(ba.getUser());
-            raf.writeUTF(ba.getPass());
-            raf.writeUTF(ba.getCpf());
-            raf.writeUTF(ba.getCity());
-            raf.writeFloat(ba.getBalance());
-            raf.writeInt(ba.getTransfers());
-            raf.writeInt(ba.getEmailsCount());
-
-            for (String email : ba.getEmails()) raf.writeUTF(email);
-
-            raf.seek(0);
-            raf.writeInt(globalId);
-            raf.close();
-            return true;
-        }
-        catch(Exception e) { return false; }
-    }
 
     public static boolean create(String source, BankAccount ba) {
 
@@ -99,7 +71,8 @@ public class Crud{
                             raf.seek(raf.getFilePointer() - 9);
                             raf.writeByte(1);
                             raf.close();
-                            return create(ba);
+
+                            return create("accounts.bin", ba);
                         }
                     }
                     else raf.skipBytes(size - 4);
