@@ -220,4 +220,27 @@ public class Crud {
     }
 
     // --------------------------------------------------- // 
+    
+    public static int getTotalAccounts() {
+
+        try {
+
+            RandomAccessFile raf = new RandomAccessFile("accounts.bin", "rw");
+            int total = 0;
+
+            raf.seek(4);
+
+            while(raf.getFilePointer() < raf.length()) {
+
+                raf.skipBytes(raf.readInt());
+                total++;
+            }
+
+            raf.close();
+            return total;
+        }
+        catch(Exception e) { return 0; }
+    }
+
+    // --------------------------------------------------- // 
 }
