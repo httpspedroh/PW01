@@ -3,6 +3,7 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.PriorityQueue;
 
@@ -40,17 +41,14 @@ public class SortFiles {
 
         raf.seek(4);
 
-        while(raf.getFilePointer() < raf.length()) {
-
-            for(int x = 0; x < pointer; x++) {
-
-                raf.readByte();
+        while (raf.getFilePointer() < raf.length()) {
+            for (int x = 0; x < pointer; x++) {
+                // raf.readByte();
                 raf.skipBytes(raf.readInt());
             }
 
             try {
-
-                raf.readByte();
+                // raf.readByte();
                 raf.readInt();
 
                 ba.setId(raf.readInt());
@@ -63,13 +61,15 @@ public class SortFiles {
                 ba.setTransfers(raf.readInt());
 
                 int emailsCount = raf.readInt();
-                for (int i = 0; i < emailsCount; i++) ba.addEmail(raf.readUTF());
+                for (int i = 0; i < emailsCount; i++)
+                    ba.addEmail(raf.readUTF());
 
                 raf.close();
-
+                System.out.println("dbg");
                 return ba;
+            } catch (Exception e) {
+                return null;
             }
-            catch(Exception e) { return null; }
         }
         return null;
     }
@@ -89,18 +89,25 @@ public class SortFiles {
         }
 
         while (true) {
+            HashMap<Integer, String> mp = new HashMap<>();
             int[] pointer = new int[size];// array mostrando pra onde o ponteiro deve ir em cada file
             int count = 0; // ponteiro
             for (var x : files) {
                 RandomAccessFile raf = new RandomAccessFile(x, "r");
-                BankAccount ba = readBankAccount(raf, pointer[count]);
-                pointer[count]++;
-                pq.add(ba);
+                // BankAccount ba;
+                if(pointer[count] < Crud.getTotalAccounts(x.getName())){
+                    BankAccount ba = readBankAccount(raf, pointer[count]);
+                    pq.add(ba);
+                    mp.put(ba.getId(), x.getName().substring(1, x.getName().length() - 1));
+                }
+                // pointer[count]++;
                 // FileInputStream fin = new FileInputStream(x);
                 raf.close();
                 count++;
             }
             Crud.create(output, pq.peek());// cria uma conta com o primeiro elemento do minHeap
+            String tmp = mp.get(pq.peek().getId());
+            pointer[Integer.parseInt(tmp.substring(1, tmp.length() - 1)) - 1]++;
             pq.remove();// tira um elemento do heap
             if (pq.isEmpty())
                 break;
@@ -116,10 +123,9 @@ public class SortFiles {
      * @param int z, index do novo arquivo (no modelo "f" + z)(f1,f2,f3...);
      */
     public static void solve(String source, int f_index, int z) throws IOException {
-        
-        if(f_index <= Crud.getTotalAccounts(source)) {
 
-            System.out.println("DBG" + z);
+        if (f_index <= Crud.getTotalAccounts(source)) {
+
             ArrayList<BankAccount> bar = new ArrayList<>();
             // enquanto i < que a capacidade maxima do pc, pegar blocos do arquivo
             for (int i = f_index; i < f_index + maxSize; ++i)
