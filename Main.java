@@ -359,8 +359,6 @@ public class Main {
                     System.out.println("4 - CIDADE");
                     System.out.println("5 - USUARIO");
                     System.out.println("6 - SALDO");
-
-                    // TODO: Ordenar
                     break;
                 }
             }
