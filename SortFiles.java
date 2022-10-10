@@ -78,7 +78,7 @@ public class SortFiles {
 
     public static void mergeFiles(String output) throws IOException {
         // minHeap de contas bancarias ordenadas por ID
-        PriorityQueue<BankAccount> pq = new PriorityQueue<>(Comparator.comparing(BankAccount::getId));
+        // PriorityQueue<BankAccount> pq = new PriorityQueue<>(Comparator.comparing(BankAccount::getId));
 
         // tamanho maximo de arquivos criados
         int size = (Crud.getTotalAccounts("accounts.bin") / maxSize) - 1;
@@ -90,17 +90,21 @@ public class SortFiles {
             files.add(tmp);
         }
 
+        int[] pointer = new int[size];// array mostrando pra onde o ponteiro deve ir em cada file
+        HashMap<Integer, String> mp = new HashMap<>();
         while (true) {
-            HashMap<Integer, String> mp = new HashMap<>();
-            int[] pointer = new int[size];// array mostrando pra onde o ponteiro deve ir em cada file
+            PriorityQueue<BankAccount> pq = new PriorityQueue<>(Comparator.comparing(BankAccount::getId));
             int count = 0; // ponteiro
             for (var x : files) {
                 RandomAccessFile raf = new RandomAccessFile(x, "r");
                 // BankAccount ba;
                 if(pointer[count] < Crud.getTotalAccounts(x.getName())){
                     BankAccount ba = readBankAccount(raf, pointer[count]);
-                    pq.add(ba);
-                    mp.put(ba.getId(), x.getName());
+                    // System.out.println(mp.get(ba.getId()));
+                    // se o elemento nao estiver no hashmap ainda, adicionar e mandar pra priority queue
+                    if(ba != null && !pq.contains(ba)) pq.add(ba);
+                    if(ba != null)
+                        mp.put(ba.getId(), x.getName());
                 }
                 // pointer[count]++;
                 // FileInputStream fin = new FileInputStream(x);
@@ -111,7 +115,6 @@ public class SortFiles {
             
             String tmp = mp.get(pq.peek().getId());
             pointer[Integer.parseInt(tmp)]++;
-            
             pq.remove();// tira um elemento do heap
             
             if(pq.isEmpty()) break;
@@ -136,16 +139,17 @@ public class SortFiles {
                 if (Crud.searchById(source, i) != null)
                     bar.add(Crud.searchById(source, i));
 
-            // insertionSort(bar);//como na maior parte dos casos o array vai estar quase
+            insertionSort(bar);//como na maior parte dos casos o array vai estar quase
             // ordenado, fica O(n) amortizado
 
             bar.forEach(i -> Crud.create(changeIndex(z), i));// adiciona o bloco todo em um arquivo no modelo "f"+index
 
             solve(source, f_index + maxSize, z + 1);
             mergeFiles("output");
-
+// /* 
             for (var x : bar)
                 System.out.println(x.getId());
+                // */
             // Arrays.sort(bar);
         }
     }
