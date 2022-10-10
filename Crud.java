@@ -232,7 +232,9 @@ public class Crud {
 
             while(raf.getFilePointer() < raf.length()) {
 
+                raf.skipBytes(1);
                 raf.skipBytes(raf.readInt());
+                
                 total++;
             }
 
