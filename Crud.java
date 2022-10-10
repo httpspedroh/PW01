@@ -225,7 +225,7 @@ public class Crud {
 
         try {
 
-            RandomAccessFile raf = new RandomAccessFile("accounts.bin", "rw");
+            RandomAccessFile raf = new RandomAccessFile(source, "rw");
             int total = 0;
 
             raf.seek(4);
@@ -234,7 +234,7 @@ public class Crud {
 
                 raf.skipBytes(1);
                 raf.skipBytes(raf.readInt());
-                
+
                 total++;
             }
 

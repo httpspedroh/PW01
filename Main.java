@@ -11,7 +11,7 @@ public class Main {
         
         RandomAccessFile raf = new RandomAccessFile("accounts.bin", "rw");
 
-        if(raf.length() == 0) raf.writeInt(0);
+        if(raf.length() == 0) raf.writeInt(95);
 
         raf.seek(0);
         globalId = raf.readInt();

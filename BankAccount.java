@@ -71,4 +71,19 @@ class BankAccount {
         baos.close();
         return baos.toByteArray();
     }
+
+    public void print() {
+
+        System.out.println("ID: " + this.getId());
+        System.out.println("Name: " + this.getName());
+        System.out.println("User: " + this.getUser());
+        System.out.println("Pass: " + this.getPass());
+        System.out.println("CPF: " + this.getCpf());
+        System.out.println("City: " + this.getCity());
+        System.out.println("Balance: " + this.getBalance());
+        System.out.println("Transfers: " + this.getTransfers());
+        System.out.println("Emails: " + this.getEmailsCount());
+
+        for (String email : this.getEmails()) System.out.println("Email: " + email);
+    }
 }
