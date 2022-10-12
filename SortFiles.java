@@ -6,6 +6,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.PriorityQueue;
+import java.util.Random;
 
 public class SortFiles {
 
@@ -132,20 +133,21 @@ public class SortFiles {
     public static void solve(String source, int f_index, int z) throws IOException {
 
         if (f_index <= Crud.getTotalAccounts(source)) {
-
             ArrayList<BankAccount> bar = new ArrayList<>();
+            RandomAccessFile raf = new RandomAccessFile(source, "r");
             // enquanto i < que a capacidade maxima do pc, pegar blocos do arquivo
-            for (int i = f_index; i < f_index + maxSize; ++i)
-                if (Crud.searchById(source, i) != null)
+            for (int i = 0; i < f_index; ++i)
+                // if (Crud.searchById(source, i) != null)
+                if(readBankAccount(raf, i) != null)
                     bar.add(Crud.searchById(source, i));
 
             insertionSort(bar);//como na maior parte dos casos o array vai estar quase
             // ordenado, fica O(n) amortizado
 
             bar.forEach(i -> Crud.create(changeIndex(z), i));// adiciona o bloco todo em um arquivo no modelo "f"+index
-
+            raf.close();
             solve(source, f_index + maxSize, z + 1);
-            mergeFiles("output");
+            // mergeFiles("output");
 // /* 
             for (var x : bar)
                 System.out.println(x.getId());
