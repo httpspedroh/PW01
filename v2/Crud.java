@@ -1,3 +1,4 @@
+import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
@@ -222,12 +223,12 @@ public class Crud {
 
     // --------------------------------------------------- // 
     
-    public static void sortById(String source, int m_registros, int n_caminhos) throws IOException {
+    public static void sortById(String source, int m_registros, int n_caminhos) throws Exception {
 
-        RandomAccessFile[] rafs = new RandomAccessFile[n_caminhos];
+        RandomAccessFile[] d_rafs = new RandomAccessFile[n_caminhos];
 
-        for(int i = 0; i < n_caminhos; i++) rafs[i] = new RandomAccessFile("accounts" + i + ".bin", "rw");
-        
+        for(int i = 0; i < n_caminhos; i++) d_rafs[i] = new RandomAccessFile("d_" + i + ".bin", "rw");
+            
         // Distribuição
         try {
 
@@ -249,20 +250,20 @@ public class Crud {
 
                 for(BankAccount ba : accounts) {
 
-                    rafs[index].seek(rafs[index].length());
-                    rafs[index].writeByte(0);
-                    rafs[index].writeInt(ba.toByteArray().length);
-                    rafs[index].writeInt(ba.getId());
-                    rafs[index].writeUTF(ba.getName());
-                    rafs[index].writeUTF(ba.getUser());
-                    rafs[index].writeUTF(ba.getPass());
-                    rafs[index].writeUTF(ba.getCpf());
-                    rafs[index].writeUTF(ba.getCity());
-                    rafs[index].writeFloat(ba.getBalance());
-                    rafs[index].writeInt(ba.getTransfers());
-                    rafs[index].writeInt(ba.getEmailsCount());
+                    d_rafs[index].seek(d_rafs[index].length());
+                    d_rafs[index].writeByte(0);
+                    d_rafs[index].writeInt(ba.toByteArray().length);
+                    d_rafs[index].writeInt(ba.getId());
+                    d_rafs[index].writeUTF(ba.getName());
+                    d_rafs[index].writeUTF(ba.getUser());
+                    d_rafs[index].writeUTF(ba.getPass());
+                    d_rafs[index].writeUTF(ba.getCpf());
+                    d_rafs[index].writeUTF(ba.getCity());
+                    d_rafs[index].writeFloat(ba.getBalance());
+                    d_rafs[index].writeInt(ba.getTransfers());
+                    d_rafs[index].writeInt(ba.getEmailsCount());
 
-                    for(String email : ba.getEmails()) rafs[index].writeUTF(email);
+                    for(String email : ba.getEmails()) d_rafs[index].writeUTF(email);
                 }
 
                 index++;
@@ -272,14 +273,122 @@ public class Crud {
                 accounts.clear();
             }
 
-            for(int x = 0; x < n_caminhos; x++) rafs[x].close();
+            for(int x = 0; x < n_caminhos; x++) d_rafs[x].close();
         }
         catch(Exception e) { e.printStackTrace(); }
 
         // ---------------------------------------------------------------------------------- //
 
         // Intercalação
+        try {
+
+            RandomAccessFile[] i_rafs = new RandomAccessFile[n_caminhos];
+
+            // ------------------------------------------------------------------ //
+
+            int intercalacao = 0;
+
+            while(true) {
+
+                for(int i = 0; i < n_caminhos; i++) {
+                    
+                    i_rafs[i] = new RandomAccessFile("i" + intercalacao + "_" + i + ".bin", "rw");
+
+                    System.out.println("i" + intercalacao + "_" + i + ".bin");
+                }
+
+                // ---------------------------------------------------------------------------- //
         
+                int index_cam = 0;
+                int index_reg = 1;
+                boolean stop = false;
+
+                while(true) {
+
+                    if(stop) break;
+                    
+                    ArrayList<BankAccount> accounts = new ArrayList<BankAccount>();
+
+                    for(int x = 0; x < n_caminhos; x++) {
+
+                        if(stop) break;
+
+                        for(int y = (index_reg == 1 ? 0 : index_reg); y < m_registros * index_reg; y++) {
+
+                            BankAccount ba;
+
+                            if(intercalacao == 0) ba = getBaIndexOf("d_" + x + ".bin", y);
+                            else ba = getBaIndexOf("i" + (intercalacao - 1) + "_" + x + ".bin", y);
+
+                            if(ba == null) {
+
+                                stop = true;
+                                break;
+                            }
+
+                            accounts.add(ba);
+                        }
+                    }
+
+                    Collections.sort(accounts);
+
+                    for(BankAccount ba : accounts) {
+
+                        i_rafs[index_cam].seek(i_rafs[index_cam].length());
+                        i_rafs[index_cam].writeByte(0);
+                        i_rafs[index_cam].writeInt(ba.toByteArray().length);
+                        i_rafs[index_cam].writeInt(ba.getId());
+                        i_rafs[index_cam].writeUTF(ba.getName());
+                        i_rafs[index_cam].writeUTF(ba.getUser());
+                        i_rafs[index_cam].writeUTF(ba.getPass());
+                        i_rafs[index_cam].writeUTF(ba.getCpf());
+                        i_rafs[index_cam].writeUTF(ba.getCity());
+                        i_rafs[index_cam].writeFloat(ba.getBalance());
+                        i_rafs[index_cam].writeInt(ba.getTransfers());
+                        i_rafs[index_cam].writeInt(ba.getEmailsCount());
+
+                        for(String email : ba.getEmails()) i_rafs[index_cam].writeUTF(email);
+                    }
+
+                    accounts.clear();
+
+                    index_cam++;
+                    index_reg *= 2;
+
+                    if(index_cam == n_caminhos) index_cam = 0;
+                }
+
+                // ---------------------------------------------------------------------------- //
+
+                if(i_rafs[1].length() == 0) break;
+        
+                intercalacao++;
+
+                for(int i = 0; i < n_caminhos; i++) i_rafs[i].close();
+
+                // if(intercalacao == 1) {
+
+                //     for(int i = 0; i < n_caminhos; i++) {
+
+                //         i_rafs[i].close();
+
+                //         File file = new File("d_" + i + ".bin");
+                //         file.delete();
+                //     }                    
+                // }
+                // else {
+
+                //     for(int i = 0; i < n_caminhos; i++) {
+
+                //         i_rafs[i].close();
+
+                //         File file = new File("i" + (intercalacao - 2) + "_" + i + ".bin");
+                //         file.delete();
+                //     }
+                // }
+            }
+        }
+        catch(Exception e) { e.printStackTrace(); }
     }
 
     // --------------------------------------------------- // 
@@ -291,7 +400,7 @@ public class Crud {
             RandomAccessFile raf = new RandomAccessFile(source, "rw");
             ArrayList<BankAccount> accounts = new ArrayList<BankAccount>();
 
-            // raf.seek(4);
+            if(source.equals("accounts.bin")) raf.seek(4);
 
             while(raf.getFilePointer() < raf.length()) {
 
@@ -331,7 +440,7 @@ public class Crud {
         RandomAccessFile raf = new RandomAccessFile(source, "rw");
         BankAccount ba = new BankAccount();
 
-        raf.seek(4);
+        if(source.equals("accounts.bin")) raf.seek(4);
 
         while(raf.getFilePointer() < raf.length()) {
 

@@ -16,9 +16,14 @@ public class Main {
         raf.seek(0);
         globalId = raf.readInt();
 
-        for(BankAccount ba : Crud.readAll("accounts0.bin")) {
+        // ----------------------------------------------------------- //
 
-            ba.print();
+        for(int x = 0; x < 2; x++) {
+
+            for(BankAccount ba : Crud.readAll("i1_" + x + ".bin")) {
+                System.out.print(ba.getBalance() + " ");
+            }
+
             System.out.println();
         }
 
