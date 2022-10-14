@@ -112,7 +112,7 @@ public class Main {
                     System.out.println("\n>>> Conta criada com sucesso!");
                     System.out.println("==================================\n");
 
-                    Crud.create(DEFAULT_FILE, ba);
+                    Crud.create(ba);
                     break;
                 }
 

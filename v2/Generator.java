@@ -15,7 +15,7 @@ public class Generator {
             ba.setTransfers(0);
             ba.addEmail("email@example.com");
 
-            Crud.create("accounts.bin", ba);
+            Crud.create(ba);
         }
     }
 }

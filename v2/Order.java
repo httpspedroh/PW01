@@ -219,7 +219,7 @@ public class Order {
                 if(i_rafs[1].length() == 0) {
                     
                     RandomAccessFile randFrom = new RandomAccessFile("i" + (intercalation) + "_0" + ".bin", "r");
-                    RandomAccessFile randTo = new RandomAccessFile("accounts.bin", "rw");
+                    RandomAccessFile randTo = new RandomAccessFile(Main.DEFAULT_FILE, "rw");
                     
                     byte[] arr = new byte[(int)randFrom.length()];
 
@@ -354,7 +354,7 @@ public class Order {
 
         try {
 
-            RandomAccessFile raf = new RandomAccessFile("accounts.bin", "rw");
+            RandomAccessFile raf = new RandomAccessFile(Main.DEFAULT_FILE, "rw");
             int total = 0;
 
             raf.seek(4);

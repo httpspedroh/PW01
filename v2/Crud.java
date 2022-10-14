@@ -6,11 +6,11 @@ public class Crud {
 
     // --------------------------------------------------- // 
     
-    public static boolean create(String source, BankAccount ba) {
+    public static boolean create(BankAccount ba) {
 
         try {
 
-            RandomAccessFile raf = new RandomAccessFile(source, "rw");
+            RandomAccessFile raf = new RandomAccessFile(Main.DEFAULT_FILE, "rw");
 
             raf.seek(raf.length());
             raf.writeByte(0);
@@ -41,7 +41,7 @@ public class Crud {
 
         try {
 
-            RandomAccessFile raf = new RandomAccessFile("accounts.bin", "rw");
+            RandomAccessFile raf = new RandomAccessFile(Main.DEFAULT_FILE, "rw");
 
             raf.seek(4);
 
@@ -76,7 +76,7 @@ public class Crud {
                             raf.writeByte(1);
                             raf.close();
 
-                            return create("accounts.bin", ba);
+                            return create(ba);
                         }
                     }
                     else raf.skipBytes(size - 4);
@@ -96,7 +96,7 @@ public class Crud {
             
         try {
 
-            RandomAccessFile raf = new RandomAccessFile("accounts.bin", "rw");
+            RandomAccessFile raf = new RandomAccessFile(Main.DEFAULT_FILE, "rw");
 
             raf.seek(4);
 
@@ -177,7 +177,7 @@ public class Crud {
 
         try {
 
-            RandomAccessFile raf = new RandomAccessFile("accounts.bin", "rw");
+            RandomAccessFile raf = new RandomAccessFile(Main.DEFAULT_FILE, "rw");
             BankAccount ba = new BankAccount();
 
             raf.seek(4);
