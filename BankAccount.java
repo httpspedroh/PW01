@@ -72,6 +72,8 @@ class BankAccount {
         return baos.toByteArray();
     }
 
+    // --------------------------------------------------- // 
+    
     public void print() {
 
         System.out.println("ID: " + this.getId());

@@ -5,16 +5,21 @@ import java.util.Scanner;
 
 public class Main {
 
+    static int globalId;
+    static final String DEFAULT_FILE = "accounts.bin";
+
     public static void main(String[] args) throws Exception {
 
-        int globalId = Crud.globalId;
-        
-        RandomAccessFile raf = new RandomAccessFile("accounts.bin", "rw");
+        RandomAccessFile raf = new RandomAccessFile(DEFAULT_FILE, "rw");
 
         if(raf.length() == 0) raf.writeInt(0);
 
         raf.seek(0);
         globalId = raf.readInt();
+        raf.close();
+        for(BankAccount ba : Order.readAll(DEFAULT_FILE)){
+            System.out.println(ba.getCity());
+        }
 
         // ----------------------------------------------------------- //
 
@@ -107,12 +112,10 @@ public class Main {
                     System.out.print("> Digite o saldo: ");
                     ba.setBalance(scr.nextFloat());
 
-                    ba.setId(++globalId);
-
                     System.out.println("\n>>> Conta criada com sucesso!");
                     System.out.println("==================================\n");
 
-                    Crud.create("accounts.bin", ba);
+                    Crud.create(ba);
                     break;
                 }
 
@@ -162,7 +165,7 @@ public class Main {
                     System.out.print("> Digite o ID da conta desejada: ");
                     int id = scr.nextInt();
 
-                    BankAccount ba = Crud.searchById( "accounts.bin",id);
+                    BankAccount ba = Crud.searchById(DEFAULT_FILE, id);
 
                     if(ba == null) System.out.println("x Conta nao encontrada!");
                     else {
@@ -319,7 +322,7 @@ public class Main {
                     System.out.print("> Digite o ID da conta desejada: ");
                     int id = scr.nextInt();
 
-                    BankAccount ba = Crud.searchById("accounts.bin",id);
+                    BankAccount ba = Crud.searchById(DEFAULT_FILE, id);
 
                     if(ba == null) System.out.println("x Conta nao encontrada!");
                     else {
@@ -362,6 +365,116 @@ public class Main {
                     System.out.println("4 - CIDADE");
                     System.out.println("5 - USUARIO");
                     System.out.println("6 - SALDO");
+                    System.out.println("================================\n");
+
+                    int updateOption = 0;
+
+                    do {
+
+                        try { 
+                            
+                            updateOption = scr.nextInt(); 
+
+                            if(updateOption < 0 || updateOption > 6) System.out.println("x Opcao invalida!");
+                        }
+                        catch (Exception e) { 
+                            
+                            System.out.println("x Digite apenas numeros!"); 
+
+                            scr.next();
+                        }
+                    }
+                    while(updateOption < 0 || updateOption > 6);
+
+                    System.out.println("\n========== ORDEM DE REGISTROS ==========");
+                    System.out.println("> Digite a quantidade M de registros: ");
+
+                    int m = 0;
+
+                    do {
+
+                        try { 
+                            
+                            m = scr.nextInt(); 
+
+                            if(m < 0 || m > 10) System.out.println("x Insira no minimo 0 e no maximo 10!");
+                        }
+                        catch (Exception e) { 
+                            
+                            System.out.println("x Digite apenas numeros!"); 
+
+                            scr.next();
+                        }
+                    }
+                    while(m < 0 || m > 10);
+
+                    System.out.println("> Digite a quantidade N de caminhos: ");
+
+                    int n = 0;
+
+                    do {
+
+                        try { 
+                            
+                            n = scr.nextInt(); 
+
+                            if(n < 0 || n > 10) System.out.println("x Insira no minimo 0 e no maximo 10!");
+                        }
+                        catch (Exception e) { 
+                            
+                            System.out.println("x Digite apenas numeros!"); 
+
+                            scr.next();
+                        }
+                    }
+                    while(n < 0 || n > 10);
+
+                    switch(updateOption) {
+
+                        case 0: break;
+
+                        case 1: {
+
+                            Order.byId(m, n);
+                            System.out.println("\n>>> Contas ordenadas por ID com sucesso!");
+                            break;
+                        }
+
+                        case 2: {
+
+                            Order.byName(m, n);
+                            System.out.println("\n>>> Contas ordenadas por nome com sucesso!");
+                            break;
+                        }
+
+                        case 3: {
+
+                            Order.byCpf(m, n);
+                            System.out.println("\n>>> Contas ordenadas por CPF com sucesso!");
+                            break;
+                        }
+
+                        case 4: {
+
+                            Order.byCity(m, n);
+                            System.out.println("\n>>> Contas ordenadas por cidade com sucesso!");
+                            break;
+                        }
+
+                        case 5: {
+
+                            Order.byUser(m, n);
+                            System.out.println("\n>>> Contas ordenadas por usuario com sucesso!");
+                            break;
+                        }
+
+                        case 6: {
+
+                            Order.byBalance(m, n);
+                            System.out.println("\n>>> Contas ordenadas por saldo com sucesso!");
+                            break;
+                        }
+                    }
                     break;
                 }
             }
@@ -371,6 +484,5 @@ public class Main {
         // ----------------------------------------------------------- //
         
         scr.close();
-        raf.close();
     }
 }

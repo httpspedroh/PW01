@@ -1,24 +1,21 @@
-import java.io.IOException;
 import java.io.RandomAccessFile;
 
 // ---------------------------------------------------------------------------------------------------------------- //
 
 public class Crud {
 
-    static int globalId;
-
-    // --------------------------------------------------- //
-
-    public static boolean create(String source, BankAccount ba) {
+    // --------------------------------------------------- // 
+    
+    public static boolean create(BankAccount ba) {
 
         try {
 
-            RandomAccessFile raf = new RandomAccessFile(source, "rw");
+            RandomAccessFile raf = new RandomAccessFile(Main.DEFAULT_FILE, "rw");
 
             raf.seek(raf.length());
             raf.writeByte(0);
             raf.writeInt(ba.toByteArray().length);
-            raf.writeInt(ba.getId());
+            raf.writeInt(++Main.globalId);
             raf.writeUTF(ba.getName());
             raf.writeUTF(ba.getUser());
             raf.writeUTF(ba.getPass());
@@ -28,39 +25,37 @@ public class Crud {
             raf.writeInt(ba.getTransfers());
             raf.writeInt(ba.getEmailsCount());
 
-            for (String email : ba.getEmails())
-                raf.writeUTF(email);
+            for(String email : ba.getEmails()) raf.writeUTF(email);
 
             raf.seek(0);
-            raf.writeInt(globalId);
+            raf.writeInt(Main.globalId);
             raf.close();
             return true;
-        } catch (Exception e) {
-            return false;
         }
+        catch(Exception e) { return false; }
     }
 
-    // --------------------------------------------------- //
+    // --------------------------------------------------- // 
 
     public static boolean update(BankAccount ba) {
 
         try {
 
-            RandomAccessFile raf = new RandomAccessFile("accounts.bin", "rw");
+            RandomAccessFile raf = new RandomAccessFile(Main.DEFAULT_FILE, "rw");
 
             raf.seek(4);
 
-            while (raf.getFilePointer() < raf.length()) {
+            while(raf.getFilePointer() < raf.length()) {
 
-                if (raf.readByte() == 0) {
+                if(raf.readByte() == 0) {
 
                     int size = raf.readInt();
                     int id = raf.readInt();
 
-                    if (ba.getId() == id) {
+                    if(ba.getId() == id) {
 
-                        if (size >= ba.toByteArray().length) {
-
+                        if(size >= ba.toByteArray().length) {
+                            
                             raf.writeUTF(ba.getName());
                             raf.writeUTF(ba.getUser());
                             raf.writeUTF(ba.getPass());
@@ -70,70 +65,68 @@ public class Crud {
                             raf.writeInt(ba.getTransfers());
                             raf.writeInt(ba.getEmailsCount());
 
-                            for (String email : ba.getEmails())
-                                raf.writeUTF(email);
+                            for (String email : ba.getEmails()) raf.writeUTF(email);
 
                             raf.close();
                             return true;
-                        } else {
+                        }
+                        else {
 
                             raf.seek(raf.getFilePointer() - 9);
                             raf.writeByte(1);
                             raf.close();
 
-                            return create("accounts.bin", ba);
+                            return create(ba);
                         }
-                    } else
-                        raf.skipBytes(size - 4);
-                } else
-                    raf.skipBytes(raf.readInt());
+                    }
+                    else raf.skipBytes(size - 4);
+                }
+                else raf.skipBytes(raf.readInt());
             }
 
             raf.close();
             return true;
-        } catch (Exception e) {
-            return false;
         }
+        catch(Exception e) { return false; }
     }
 
-    // --------------------------------------------------- //
-
-    public static BankAccount delete(BankAccount ba) {
-
+    // --------------------------------------------------- // 
+    
+    public static BankAccount delete(BankAccount ba) {  
+            
         try {
 
-            RandomAccessFile raf = new RandomAccessFile("accounts.bin", "rw");
+            RandomAccessFile raf = new RandomAccessFile(Main.DEFAULT_FILE, "rw");
 
             raf.seek(4);
 
-            while (raf.getFilePointer() < raf.length()) {
+            while(raf.getFilePointer() < raf.length()) {
 
-                if (raf.readByte() == 0) {
+                if(raf.readByte() == 0) {
 
                     int size = raf.readInt();
                     int id = raf.readInt();
 
-                    if (ba.getId() == id) {
+                    if(ba.getId() == id) {
 
                         raf.seek(raf.getFilePointer() - 9);
                         raf.writeByte(1);
                         raf.close();
                         return ba;
-                    } else
-                        raf.skipBytes(size - 4);
-                } else
-                    raf.skipBytes(raf.readInt());
+                    }
+                    else raf.skipBytes(size - 4);
+                }
+                else raf.skipBytes(raf.readInt());
             }
 
             raf.close();
             return null;
-        } catch (Exception e) {
-            return null;
         }
+        catch(Exception e) { return null; }
     }
 
-    // --------------------------------------------------- //
-
+    // --------------------------------------------------- // 
+    
     public static BankAccount searchById(String source, int id) {
 
         try {
@@ -143,15 +136,15 @@ public class Crud {
 
             raf.seek(4);
 
-            while (raf.getFilePointer() < raf.length()) {
+            while(raf.getFilePointer() < raf.length()) {
 
-                if (raf.readByte() == 0) {
+                if(raf.readByte() == 0) {
 
                     int size = raf.readInt();
 
                     ba.setId(raf.readInt());
 
-                    if (ba.getId() == id) {
+                    if(ba.getId() == id) {
 
                         ba.setName(raf.readUTF());
                         ba.setUser(raf.readUTF());
@@ -162,38 +155,36 @@ public class Crud {
                         ba.setTransfers(raf.readInt());
 
                         int emailsCount = raf.readInt();
-                        for (int i = 0; i < emailsCount; i++)
-                            ba.addEmail(raf.readUTF());
+                        for (int i = 0; i < emailsCount; i++) ba.addEmail(raf.readUTF());
 
                         raf.close();
                         return ba;
-                    } else
-                        raf.skipBytes(size - 4);
-                } else
-                    raf.skipBytes(raf.readInt());
+                    }
+                    else raf.skipBytes(size - 4);
+                }
+                else raf.skipBytes(raf.readInt());
             }
 
             raf.close();
             return null;
-        } catch (Exception e) {
-            return null;
         }
+        catch(Exception e) { return null; }
     }
 
-    // --------------------------------------------------- //
-
+    // --------------------------------------------------- // 
+    
     public static BankAccount searchByUser(String user) {
 
         try {
 
-            RandomAccessFile raf = new RandomAccessFile("accounts.bin", "rw");
+            RandomAccessFile raf = new RandomAccessFile(Main.DEFAULT_FILE, "rw");
             BankAccount ba = new BankAccount();
 
             raf.seek(4);
 
-            while (raf.getFilePointer() < raf.length()) {
+            while(raf.getFilePointer() < raf.length()) {
 
-                if (raf.readByte() == 0) {
+                if(raf.readByte() == 0) {
 
                     int size = raf.readInt();
 
@@ -201,7 +192,7 @@ public class Crud {
                     ba.setName(raf.readUTF());
                     ba.setUser(raf.readUTF());
 
-                    if (ba.getUser().equals(user)) {
+                    if(ba.getUser().equals(user)) {
 
                         ba.setPass(raf.readUTF());
                         ba.setCpf(raf.readUTF());
@@ -210,94 +201,21 @@ public class Crud {
                         ba.setTransfers(raf.readInt());
 
                         int emailsCount = raf.readInt();
-                        for (int i = 0; i < emailsCount; i++)
-                            ba.addEmail(raf.readUTF());
+                        for (int i = 0; i < emailsCount; i++) ba.addEmail(raf.readUTF());
 
                         raf.close();
                         return ba;
-                    } else
-                        raf.skipBytes(size - 8 - ba.getName().length() - ba.getUser().length());
-                } else
-                    raf.skipBytes(raf.readInt());
+                    }
+                    else raf.skipBytes(size - 8 - ba.getName().length() - ba.getUser().length());
+                }
+                else raf.skipBytes(raf.readInt());
             }
 
             raf.close();
             return null;
-        } catch (Exception e) {
-            return null;
         }
+        catch(Exception e) { return null; }
     }
 
-    // --------------------------------------------------- //
-
-    public static int getTotalAccounts(String source) {
-
-        try {
-
-            RandomAccessFile raf = new RandomAccessFile(source, "rw");
-            int total = 0;
-
-            raf.seek(4);
-
-            while (raf.getFilePointer() < raf.length()) {
-
-                raf.skipBytes(1);
-                raf.skipBytes(raf.readInt());
-
-                total++;
-            }
-
-            raf.close();
-            return total;
-        } catch (Exception e) {
-            return 0;
-        }
-    }
-
-    // --------------------------------------------------- //
-
-    /*
-     * @param raf, raf do arquivo
-     * 
-     * @param pointer, ponteiro pro usuario
-     * 
-     * le o usuario de numero @pointer de um arquivo @raf
-     */
-    public static BankAccount readBankAccount(RandomAccessFile raf, int pointer) throws IOException {
-
-        BankAccount ba = new BankAccount();
-
-        while(raf.getFilePointer() < raf.length()) {
-
-            for(int x = 0; x < pointer; x++) {
-
-                raf.readByte();
-                raf.skipBytes(raf.readInt());
-            }
-
-            try {
-                long k = raf.getFilePointer(); 
-                raf.readByte();
-                raf.readInt();
-
-                ba.setId(raf.readInt());
-                ba.setName(raf.readUTF());
-                ba.setUser(raf.readUTF());
-                ba.setPass(raf.readUTF());
-                ba.setCpf(raf.readUTF());
-                ba.setCity(raf.readUTF());
-                ba.setBalance(raf.readFloat());
-                ba.setTransfers(raf.readInt());
-
-                for(int i = 0; i < raf.readInt(); i++) ba.addEmail(raf.readUTF());
-
-                raf.close();
-                return ba;
-            }
-            catch (Exception e) { return null; }
-        }
-        return null;
-    }
-
-
+    // --------------------------------------------------- // 
 }
