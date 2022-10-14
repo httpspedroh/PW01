@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 // ---------------------------------------------------------------------------------------------------------------- //
 
-class BankAccount implements Comparable<BankAccount> {
+class BankAccount {
 
     private int id, transfers;
     private String name, user, pass, cpf, city;
@@ -46,10 +46,6 @@ class BankAccount implements Comparable<BankAccount> {
     public void setBalance(float balance) { this.balance = balance; }
     public void setTransfers(int transfers) { this.transfers = transfers; }
     public void addEmail(String email) { this.emails.add(email); }
-
-    // --------------------------------------------------- // 
-    
-    public int compareTo(BankAccount ba) { return Float.compare(this.balance, ba.balance); }
 
     // --------------------------------------------------- // 
     

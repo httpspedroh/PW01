@@ -11,7 +11,7 @@ public class Generator {
             ba.setPass("senha123");
             ba.setCpf("cpf123");
             ba.setCity("BH");
-            ba.setBalance((float)Math.random() * (50000 - 5000));
+            ba.setBalance((float)((Math.random() * (9000 - 1000)) + 1000));
             ba.setTransfers(0);
             ba.addEmail("email@example.com");
 

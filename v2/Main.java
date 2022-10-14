@@ -6,26 +6,17 @@ import java.util.Scanner;
 public class Main {
 
     static int globalId;
+    static final String DEFAULT_FILE = "accounts.bin";
 
     public static void main(String[] args) throws Exception {
 
-        RandomAccessFile raf = new RandomAccessFile("accounts.bin", "rw");
+        RandomAccessFile raf = new RandomAccessFile(DEFAULT_FILE, "rw");
 
         if(raf.length() == 0) raf.writeInt(0);
 
         raf.seek(0);
         globalId = raf.readInt();
-
-        // ----------------------------------------------------------- //
-
-        for(int x = 0; x < 2; x++) {
-
-            for(BankAccount ba : Crud.readAll("i1_" + x + ".bin")) {
-                System.out.print(ba.getBalance() + " ");
-            }
-
-            System.out.println();
-        }
+        raf.close();
 
         // ----------------------------------------------------------- //
 
@@ -121,7 +112,7 @@ public class Main {
                     System.out.println("\n>>> Conta criada com sucesso!");
                     System.out.println("==================================\n");
 
-                    Crud.create("accounts.bin", ba);
+                    Crud.create(DEFAULT_FILE, ba);
                     break;
                 }
 
@@ -171,7 +162,7 @@ public class Main {
                     System.out.print("> Digite o ID da conta desejada: ");
                     int id = scr.nextInt();
 
-                    BankAccount ba = Crud.searchById( "accounts.bin",id);
+                    BankAccount ba = Crud.searchById(DEFAULT_FILE, id);
 
                     if(ba == null) System.out.println("x Conta nao encontrada!");
                     else {
@@ -328,7 +319,7 @@ public class Main {
                     System.out.print("> Digite o ID da conta desejada: ");
                     int id = scr.nextInt();
 
-                    BankAccount ba = Crud.searchById("accounts.bin",id);
+                    BankAccount ba = Crud.searchById(DEFAULT_FILE, id);
 
                     if(ba == null) System.out.println("x Conta nao encontrada!");
                     else {
@@ -441,45 +432,45 @@ public class Main {
 
                         case 1: {
 
-                            Crud.sortById("accounts.bin", m, n);
+                            Order.byId(m, n);
                             System.out.println("\n>>> Contas ordenadas por ID com sucesso!");
                             break;
                         }
 
-                        // case 2: {
+                        case 2: {
 
-                        //     Crud.sortByName("accounts.bin", m, n);
-                        //     System.out.println("\n>>> Contas ordenadas por nome com sucesso!");
-                        //     break;
-                        // }
+                            Order.byName(m, n);
+                            System.out.println("\n>>> Contas ordenadas por nome com sucesso!");
+                            break;
+                        }
 
-                        // case 3: {
+                        case 3: {
 
-                        //     Crud.sortByCpf("accounts.bin", m, n);
-                        //     System.out.println("\n>>> Contas ordenadas por CPF com sucesso!");
-                        //     break;
-                        // }
+                            Order.byCpf(m, n);
+                            System.out.println("\n>>> Contas ordenadas por CPF com sucesso!");
+                            break;
+                        }
 
-                        // case 4: {
+                        case 4: {
 
-                        //     Crud.sortByCity("accounts.bin", m, n);
-                        //     System.out.println("\n>>> Contas ordenadas por cidade com sucesso!");
-                        //     break;
-                        // }
+                            Order.byCity(m, n);
+                            System.out.println("\n>>> Contas ordenadas por cidade com sucesso!");
+                            break;
+                        }
 
-                        // case 5: {
+                        case 5: {
 
-                        //     Crud.sortByUser("accounts.bin", m, n);
-                        //     System.out.println("\n>>> Contas ordenadas por usuario com sucesso!");
-                        //     break;
-                        // }
+                            Order.byUser(m, n);
+                            System.out.println("\n>>> Contas ordenadas por usuario com sucesso!");
+                            break;
+                        }
 
-                        // case 6: {
+                        case 6: {
 
-                        //     Crud.sortByBalance("accounts.bin", m, n);
-                        //     System.out.println("\n>>> Contas ordenadas por saldo com sucesso!");
-                        //     break;
-                        // }
+                            Order.byBalance(m, n);
+                            System.out.println("\n>>> Contas ordenadas por saldo com sucesso!");
+                            break;
+                        }
                     }
                     break;
                 }
@@ -490,6 +481,5 @@ public class Main {
         // ----------------------------------------------------------- //
         
         scr.close();
-        raf.close();
     }
 }
