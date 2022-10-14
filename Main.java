@@ -17,9 +17,6 @@ public class Main {
         raf.seek(0);
         globalId = raf.readInt();
         raf.close();
-        for(BankAccount ba : Order.readAll(DEFAULT_FILE)){
-            System.out.println(ba.getCity());
-        }
 
         // ----------------------------------------------------------- //
 
