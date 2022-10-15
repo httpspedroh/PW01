@@ -71,7 +71,6 @@ public class Inverted {
 
                 for(var y : harr.get(x)) raf.writeLong(y);
             }
-
             raf.close();
 
             // --------------------------------------------------------------------- //
