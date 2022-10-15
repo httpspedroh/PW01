@@ -508,13 +508,19 @@ public class BPlusTree {
     }
   }
 
-
   public static void main(String[] args) {
     BPlusTree bpt = null;
     bpt = new BPlusTree(5);// cria uma arvore de ordem 5
-    //key == id && value == long pointer
-    //enquanto i < order.getTotalAccounts(), insere na arvore
-    //ai depois eh so chamar a funcao inOrderToFile :)
+    // key == id && value == long pointer
+    // enquanto i < order.getTotalAccounts(), insere i na arvore
+    try {
+      for (int i = 0; i < Order.getTotalAccounts(); ++i) {
+        bpt.insert(Inverted.getBaIndexOf(i).getFirst().getId(), Inverted.getBaIndexOf(i).getSecond());
+      }
+    } catch (IOException e) {
+      System.out.println("null pointer");
+    }
+    // ai depois eh so chamar a funcao inOrderToFile :)
     bpt.insert(5, 33);
     bpt.insert(15, 21);
     bpt.insert(25, 31);
