@@ -1,5 +1,8 @@
 // Searching on a B+ tree in Java
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.util.*;
 
 public class BPlusTree {
@@ -183,13 +186,16 @@ public class BPlusTree {
       }
     }
   }
-  /* 
-  public static void inOrderTraversal(){
-    int i;
-    for(i = 0; i < n; ++i){
 
+  public void inOrderTraversal() {
+    LeafNode current = firstLeaf;
+    while (current != null) {
+      for (int i = 0; i < current.numPairs; i++) {
+        System.out.println(current.dictionary[i].key + " " + current.dictionary[i].value);
+      }
+      current = current.rightSibling;
     }
-  }*/
+  }
 
   // Binary search program
   private int binarySearch(DictionaryPair[] dps, int numPairs, int t) {
@@ -484,20 +490,37 @@ public class BPlusTree {
     return values;
   }
 
+  public void inOrderToFile(String filename) {
+    try {
+      RandomAccessFile raf = new RandomAccessFile(filename, "rw");
+
+      LeafNode current = firstLeaf;
+      while (current != null) {
+        for (int i = 0; i < current.numPairs; i++) {
+          raf.writeLong(current.dictionary[i].key);
+          raf.writeLong(current.dictionary[i].value);
+        }
+        current = current.rightSibling;
+      }
+      raf.close();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
+
   public static void main(String[] args) {
     BPlusTree bpt = null;
     bpt = new BPlusTree(5);// cria uma arvore de ordem 5
+    //key == id && value == long pointer
+    //enquanto i < order.getTotalAccounts(), insere na arvore
+    //ai depois eh so chamar a funcao inOrderToFile :)
     bpt.insert(5, 33);
     bpt.insert(15, 21);
     bpt.insert(25, 31);
     bpt.insert(35, 41);
     bpt.insert(45, 10);
 
-    if (bpt.search(15) != -1) {
-      System.out.println("Found");
-    } else {
-      System.out.println("Not Found");
-    }
-    ;
+    bpt.inOrderTraversal();
   }
 }
