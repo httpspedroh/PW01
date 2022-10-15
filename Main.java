@@ -12,7 +12,13 @@ public class Main {
 
         RandomAccessFile raf = new RandomAccessFile(DEFAULT_FILE, "rw");
 
-        if(raf.length() == 0) raf.writeInt(0);
+        // Carga inicial
+        if(raf.length() == 0) {
+            
+            raf.writeInt(0);
+
+            Inverted.create();
+        }
 
         raf.seek(0);
         globalId = raf.readInt();

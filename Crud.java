@@ -30,6 +30,8 @@ public class Crud {
             raf.seek(0);
             raf.writeInt(Main.globalId);
             raf.close();
+
+            Inverted.create();
             return true;
         }
         catch(Exception e) { return false; }
@@ -65,9 +67,11 @@ public class Crud {
                             raf.writeInt(ba.getTransfers());
                             raf.writeInt(ba.getEmailsCount());
 
-                            for (String email : ba.getEmails()) raf.writeUTF(email);
+                            for(String email : ba.getEmails()) raf.writeUTF(email);
 
                             raf.close();
+
+                            Inverted.create();
                             return true;
                         }
                         else {
@@ -75,7 +79,6 @@ public class Crud {
                             raf.seek(raf.getFilePointer() - 9);
                             raf.writeByte(1);
                             raf.close();
-
                             return create(ba);
                         }
                     }
@@ -112,6 +115,8 @@ public class Crud {
                         raf.seek(raf.getFilePointer() - 9);
                         raf.writeByte(1);
                         raf.close();
+
+                        Inverted.create();
                         return ba;
                     }
                     else raf.skipBytes(size - 4);
