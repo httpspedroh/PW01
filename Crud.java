@@ -33,6 +33,7 @@ public class Crud {
 
             Inverted.create();
             Hash.create(4);
+            BPlusTree.create(5);
             return true;
         }
         catch(Exception e) { return false; }
@@ -74,6 +75,7 @@ public class Crud {
 
                             Inverted.create();
                             Hash.create(4);
+                            BPlusTree.create(5);
                             return true;
                         }
                         else {
@@ -120,6 +122,7 @@ public class Crud {
 
                         Inverted.create();
                         Hash.create(4);
+                        BPlusTree.create(5);
                         return ba;
                     }
                     else raf.skipBytes(size - 4);

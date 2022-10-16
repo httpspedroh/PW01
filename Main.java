@@ -8,6 +8,9 @@ public class Main {
     static int globalId;
     static final String DEFAULT_FILE = "accounts.bin";
     static final String DEFAULT_FILE_HASH = "hash.bin";
+    static final String DEFAULT_FILE_CITY = "indexByCity.bin";
+    static final String DEFAULT_FILE_NAME = "indexByName.bin";
+    static final String DEFAULT_FILE_BTREE = "btree.bin";
 
     public static void main(String[] args) throws Exception {
 
@@ -20,6 +23,7 @@ public class Main {
 
             Inverted.create();
             Hash.create(4);
+            BPlusTree.create(5);
         }
 
         raf.seek(0);
@@ -44,6 +48,7 @@ public class Main {
             System.out.println("4 - ATUALIZAR REGISTRO");
             System.out.println("5 - DELETAR REGISTRO");
             System.out.println("6 - ORDENAR REGISTROS");
+            System.out.println("7 - LISTAR REGISTROS");
             System.out.println("================================\n");
 
             // ----------------------------------------------------------- //
@@ -55,7 +60,7 @@ public class Main {
                     
                     option = scr.nextInt(); 
 
-                    if(option < 0 || option > 6) System.out.println("x Opcao invalida!");
+                    if(option < 0 || option > 7) System.out.println("x Opcao invalida!");
                 }
                 catch (Exception e) { 
                     
@@ -65,7 +70,7 @@ public class Main {
                     break;
                 }
             }
-            while(option < 0 || option > 6);
+            while(option < 0 || option > 7);
 
             // Option execution
             switch(option) {
@@ -479,6 +484,28 @@ public class Main {
                             System.out.println("\n>>> Contas ordenadas por saldo com sucesso!");
                             break;
                         }
+                    }
+                    break;
+                }
+
+                // ----------------------------------------------------------- //
+                
+                case 7: {
+                    
+                    System.out.println("\n========== LISTAR REGISTROS ==========");
+
+                    for(BankAccount ba : Order.readAll(DEFAULT_FILE)) {
+
+                        System.out.println("ID: " + ba.getId());
+                        System.out.println("Nome: " + ba.getName());
+                        System.out.println("CPF: " + ba.getCpf());
+                        System.out.println("Cidade: " + ba.getCity());
+                        System.out.println("Usuario: " + ba.getUser());
+                        System.out.println("Senha: " + ba.getPass());
+                        System.out.println("Saldo: " + ba.getBalance());
+                        System.out.println("Emails: " + ba.getEmails());
+                        System.out.println("Transferencias: " + ba.getTransfers());
+                        System.out.println("==================================\n");
                     }
                     break;
                 }

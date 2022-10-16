@@ -246,6 +246,7 @@ public class Order {
 
                     Inverted.create();
                     Hash.create(4);
+                    BPlusTree.create(5);
                     break;
                 }
 

@@ -31,9 +31,6 @@ public class Inverted {
 
     public static boolean create() throws FileNotFoundException, IOException {
 
-        String outputCity = "indexByCity.bin";
-        String outputName = "indexByName.bin";
-
         HashMap<String, ArrayList<Long>> harr = new HashMap<>();
         HashMap<String, ArrayList<Long>> harr2 = new HashMap<>();
 
@@ -61,7 +58,7 @@ public class Inverted {
 
             RandomAccessFile raf;
 
-            raf = new RandomAccessFile(outputCity, "rw");
+            raf = new RandomAccessFile(Main.DEFAULT_FILE_CITY, "rw");
             raf.setLength(0);
 
             for(var x : harr.keySet()) {
@@ -95,7 +92,7 @@ public class Inverted {
                 }
             }
 
-            raf = new RandomAccessFile(outputName, "rw");
+            raf = new RandomAccessFile(Main.DEFAULT_FILE_NAME, "rw");
             raf.setLength(0);
 
             for(var x : harr2.keySet()) {
