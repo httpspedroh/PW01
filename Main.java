@@ -7,6 +7,7 @@ public class Main {
 
     static int globalId;
     static final String DEFAULT_FILE = "accounts.bin";
+    static final String DEFAULT_FILE_HASH = "hash.bin";
 
     public static void main(String[] args) throws Exception {
 
@@ -18,6 +19,7 @@ public class Main {
             raf.writeInt(0);
 
             Inverted.create();
+            Hash.create(4);
         }
 
         raf.seek(0);

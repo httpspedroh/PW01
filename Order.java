@@ -245,7 +245,7 @@ public class Order {
                     // --------------------------------------------- //
 
                     Inverted.create();
-
+                    Hash.create(4);
                     break;
                 }
 
