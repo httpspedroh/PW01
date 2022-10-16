@@ -1,6 +1,4 @@
 // Searching on a B+ tree in Java
-
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.*;
@@ -50,45 +48,12 @@ public class BPlusTree {
       this.degree++;
     }
 
-    private boolean isDeficient() {
-      return this.degree < this.minDegree;
-    }
-
-    private boolean isLendable() {
-      return this.degree > this.minDegree;
-    }
-
-    private boolean isMergeable() {
-      return this.degree == this.minDegree;
-    }
-
     private boolean isOverfull() {
       return this.degree == maxDegree + 1;
     }
 
-    private void prependChildPointer(Node pointer) {
-      for (int i = degree - 1; i >= 0; i--) {
-        childPointers[i + 1] = childPointers[i];
-      }
-      this.childPointers[0] = pointer;
-      this.degree++;
-    }
-
-    private void removeKey(int index) {
-      this.keys[index] = null;
-    }
-
     private void removePointer(int index) {
       this.childPointers[index] = null;
-      this.degree--;
-    }
-
-    private void removePointer(Node pointer) {
-      for (int i = 0; i < childPointers.length; i++) {
-        if (childPointers[i] == pointer) {
-          this.childPointers[i] = null;
-        }
-      }
       this.degree--;
     }
 
