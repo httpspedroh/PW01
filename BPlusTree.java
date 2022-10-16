@@ -485,13 +485,7 @@ public class BPlusTree {
     } catch (IOException e) {
       System.out.println("null pointer");
     }
-    // ai depois eh so chamar a funcao inOrderToFile :)
-    bpt.insert(5, 33);
-    bpt.insert(15, 21);
-    bpt.insert(25, 31);
-    bpt.insert(35, 41);
-    bpt.insert(45, 10);
-
+    bpt.inOrderToFile("bpt.bin");
     bpt.inOrderTraversal();
   }
 }
