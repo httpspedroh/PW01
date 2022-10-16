@@ -141,27 +141,27 @@ public class Hash {
 
     public static void main(String[] args) {
 
-        try {
+        // try {
 
-            create(4);
+        //     create(4);
 
-            System.out.println("Profundidade: " + profundidade + "\n");
+        //     System.out.println("Profundidade: " + profundidade + "\n");
 
-            for(int i = 0; i < buckets.size(); i++) {
+        //     for(int i = 0; i < buckets.size(); i++) {
 
-                if(buckets.get(i).size() > 0) {
+        //         if(buckets.get(i).size() > 0) {
 
-                    System.out.println("Bucket " + i + ": " + buckets.get(i).size() + " registro(s)");
+        //             System.out.println("Bucket " + i + ": " + buckets.get(i).size() + " registro(s)");
                     
-                    for(Pair<Integer, Long> p : buckets.get(i)) {
+        //             for(Pair<Integer, Long> p : buckets.get(i)) {
 
-                        System.out.println("ID: " + p.first + " | FP: " + p.second);
-                    }
+        //                 System.out.println("ID: " + p.first + " | FP: " + p.second);
+        //             }
 
-                    System.out.println();
-                }
-            }
-        }
-        catch(Exception e) { e.printStackTrace(); }
+        //             System.out.println();
+        //         }
+        //     }
+        // }
+        // catch(Exception e) { e.printStackTrace(); }
     }
 }
